@@ -1,37 +1,31 @@
 
+import userConversation from "../../zustad/useConversation";
+import useGetAllMessages from "../../Hooks/useGetAllMessages.js";
+import MessageSkeleton from '../skeletons/MessageSkeleton.jsx'
+import SingleMessage from "./SingleMessage.jsx";
+import { useEffect, useRef } from "react";
+
 const Message = () => {
+    // eslint-disable-next-line no-unused-vars
+    const { selectedConversation, setSelectedConversation } = userConversation();
+    const { loading, messages } = useGetAllMessages();
+    const lastmessage = useRef(null);
+    useEffect(() => {
+        setTimeout(() => {
+            lastmessage.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+    }, [messages]);
     return (
         <>
-            <div className="chat chat-start">
-                <div className="chat-image avatar">
-                    <div className="w-10 rounded-full">
-                        <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                    </div>
+            {!loading && messages.length > 0 && messages.map((message) => (
+                <div key={message._id} ref={lastmessage}>
+                    <SingleMessage message={message} />
                 </div>
-                <div className="chat-header">
-                    Obi-Wan Kenobi
-                    <time className="text-xs opacity-50">12:45</time>
-                </div>
-                <div className="chat-bubble">You were the Chosen One!</div>
-                <div className="chat-footer opacity-50">
-                    Delivered
-                </div>
-            </div>
-            <div className="chat chat-end">
-                <div className="chat-image avatar">
-                    <div className="w-10 rounded-full">
-                        <img alt="Tailwind CSS chat bubble component" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                    </div>
-                </div>
-                <div className="chat-header">
-                    Anakin
-                    <time className="text-xs opacity-50">12:46</time>
-                </div>
-                <div className="chat-bubble">I hate you!</div>
-                <div className="chat-footer opacity-50">
-                    Seen at 12:46
-                </div>
-            </div>
+            ))}
+            {loading && [...Array(3)].map((_, idx) => <MessageSkeleton key={idx} />)}
+            {!loading && messages.length === 0 && (
+                <p>Start a new conversation with {selectedConversation.username}</p>
+            )}
         </>
     )
 }

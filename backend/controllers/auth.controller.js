@@ -8,11 +8,11 @@ export async function login(req, res, next) {
         const { username, password } = req.body;
         const user = await User.findOne({ username: username });
         if (!user) {
-            return res.status(401).json({ message: "Wrong login credentials" });
+            return res.status(401).json({ error: "Wrong login credentials" });
         }
         const isPassMatch = await bcrypt.compare(password, user.password);
         if (!isPassMatch) {
-            return res.status(401).json({ message: "Wrong login credentials" })
+            return res.status(401).json({ error: "Wrong login credentials" })
         }
         const jwttoken = genToken(user._id);
         res.cookie("jwt", jwttoken, {
@@ -24,7 +24,7 @@ export async function login(req, res, next) {
         res.status(200).json({ _id: user._id, name: user.name, username: user.username, profile: user.profilePic });
     } catch (error) {
         console.log("Error in login controller");
-        res.status(500).send({ message: error.message })
+        res.status(500).send({ error: error.message })
     }
 }
 export async function signup(req, res, next) {
@@ -57,22 +57,22 @@ export async function signup(req, res, next) {
                 secure: process.env.NODE_ENV !== "development"
             })
             await newuser.save();
-            res.status(201).json({ message: "New user created.", _id: newuser._id, name: newuser.name, username: newuser.username, profile: newuser.profilePic });
+            res.status(201).json({ _id: newuser._id, name: newuser.name, username: newuser.username, profile: newuser.profilePic });
         } else {
             res.staus(400).json({ message: "Invalid user data" });
         }
     } catch (error) {
         console.log("Error in signup controller");
-        res.status(500).send({ message: error.message })
+        res.status(500).send({ error: error.message })
     }
 }
 
 export async function logout(req, res, next) {
     try {
-        res.clearCookie("jwt"); 
-        res.status(200).json({ message: "Logout successfully"});
+        res.clearCookie("jwt");
+        res.status(200).json({ message: "Logout successfully" });
     } catch (error) {
         console.log("Error in signup controller");
-        res.status(500).send({ message: error.message })
+        res.status(500).send({ error: error.message })
     }
 }

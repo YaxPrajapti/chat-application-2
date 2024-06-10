@@ -1,37 +1,26 @@
-const UserList = () => {
+import { useState } from "react";
+import userConversation from "../zustad/useConversation";
+
+
+const UserList = ({ conversation }) => {
+    const { selectedConversation, setSelectedConversation } = userConversation();
+    const [isSelected, setIsSelected] = useState(false);
+
     return (
         <>
             <ul className="menu h-fit bg-base-200 w-56 rounded-box">
-                <li>
-                    <a>
-                        <div className="avatar online">
-                            <div className="w-6 rounded-full">
-                                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                {conversation.map((conv) => (
+                    <li key={conv._id} onClick={() => { setSelectedConversation(conv); setIsSelected(true) }}>
+                        <a className={isSelected && selectedConversation._id === conv._id ? "bg-primary" : ""}>
+                            <div className="avatar online">
+                                <div className="w-6 rounded-full">
+                                    <img src={conv.profilePic} />
+                                </div>
                             </div>
-                        </div>
-                        Item 2
-                    </a>
-                </li>
-                <li>
-                    <a>
-                        <div className="avatar">
-                            <div className="w-6 rounded-full">
-                                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                            </div>
-                        </div>
-                        Item 2
-                    </a>
-                </li>
-                <li>
-                    <a>
-                        <div className="avatar">
-                            <div className="w-6 rounded-full">
-                                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                            </div>
-                        </div>
-                        Item 2
-                    </a>
-                </li>
+                            {conv.username}
+                        </a>
+                    </li>
+                ))}
             </ul>
         </>
     )
