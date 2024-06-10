@@ -5,7 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from 'cookie-parser'
 import { app, io, server } from './Socket/socket.js';
-import helmet from 'helmet'; 
+import helmet from 'helmet';
 import compression from 'compression';
 dotenv.config({ path: "../.env" });
 
@@ -25,8 +25,27 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(helmet()); 
-app.use(compression()); 
+app.use(compression());
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            //  "default-src" used as fallback for any undeclared directives
+            "default-src": ["'self'"],
+            // I have stripe_set up
+            "script-src": ["'self'", "'unsafe-inline'", "js.stripe.com"],
+            "style-src": ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
+            "frame-src": ["'self'", "js.stripe.com"],
+            "font-src": [
+                "'self'",
+                "fonts.googleapis.com",
+                "fonts.gstatic.com",
+                "res.cloudinary.com/",
+            ],
+            "img-src": ["'self'", "data:", "https://res.cloudinary.com"],
+        },
+        reportOnly: true,
+    })
+);
 
 //middlewares: 
 app.use('/api/auth', authRoutes);
