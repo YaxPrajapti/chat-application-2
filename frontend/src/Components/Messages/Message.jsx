@@ -4,11 +4,13 @@ import useGetAllMessages from "../../Hooks/useGetAllMessages.js";
 import MessageSkeleton from '../skeletons/MessageSkeleton.jsx'
 import SingleMessage from "./SingleMessage.jsx";
 import { useEffect, useRef } from "react";
+import useListenMessage from "../../Hooks/useListenMessage.js";
 
 const Message = () => {
     // eslint-disable-next-line no-unused-vars
     const { selectedConversation, setSelectedConversation } = userConversation();
     const { loading, messages } = useGetAllMessages();
+    useListenMessage(); 
     const lastmessage = useRef(null);
     useEffect(() => {
         setTimeout(() => {

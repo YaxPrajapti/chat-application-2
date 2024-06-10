@@ -6,10 +6,12 @@ import Home from "./Pages/Home/home.jsx"
 import Login from './Pages/Login/login.jsx'
 import Signup from "./Pages/Signup/Signup.jsx"
 import { useAuthContext } from "./Context/AuthContextProvider.jsx";
+import { useSocketContext } from "./Context/SocketContext.jsx";
 
 function App() {
   const { authuser } = useAuthContext();
   console.log(authuser);
+
   return (
     <div className="h-fit">
       <Toaster />

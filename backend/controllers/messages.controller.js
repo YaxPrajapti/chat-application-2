@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import Conversation from '../Model/conversationModel.js'
 import Message from '../Model/messageModel.js'
+import {getRecvSocketId, io} from '../Socket/socket.js'; 
+
 
 export async function sendMessage(req, res, next) {
     try {
@@ -23,6 +25,10 @@ export async function sendMessage(req, res, next) {
             conversation.messages.push(newMsg._id);
         }
         await Promise.all([conversation.save(), newMsg.save()]);
+        const recvSocketId = getRecvSocketId(recvId); 
+        if(recvSocketId){
+            io.to(recvSocketId).emit("new-message", newMsg); 
+        }
         return res.status(201).json(newMsg);
     } catch (error) {
         console.log("error in send message controller: ", error.message);
