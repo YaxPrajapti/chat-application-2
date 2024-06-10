@@ -15,7 +15,7 @@ export const SocketContextProvider = ({ children }) => {
     const { authuser } = useAuthContext();
     useEffect(() => {
         if (authuser) {
-            const socket = io('http://localhost:3000', {
+            const socket = io('https://lets-talk-udt1.onrender.com/', {
                 query: {
                     userId: authuser._id,
                 }
