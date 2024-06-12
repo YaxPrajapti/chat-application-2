@@ -24,11 +24,11 @@ io.on('connection', (socket) => {
         userSocketMap[userId] = socket.id;
         console.log("Map: ", userSocketMap);
     }
-    socket.emit('getOnlineUser', Object.keys(userSocketMap));
+    io.emit('getOnlineUser', Object.keys(userSocketMap));
     socket.on('disconnect', () => {
         console.log("User with socket id: ", socket.id, " disconnected");
         delete userSocketMap[userId];
-        socket.emit('getOnlineUser', Object.keys(userSocketMap));
+        io.emit('getOnlineUser', Object.keys(userSocketMap));
     })
 })
 
